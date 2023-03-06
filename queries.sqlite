@@ -2,7 +2,7 @@
 CREATE TABLE Character (
     PlayerID int NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
-    health int NOT NULL,
+    health int NOT NULL DEFAULT 100,
     isSelected int,
     PRIMARY KEY (PlayerID),
     FOREIGN KEY (isSelected) REFERENCES Weapon(WeaponID)
@@ -46,12 +46,12 @@ CREATE TABLE AttackType (
 
 
 
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (1, 'Player1', 100, 1);
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (2, 'Player2', 100, 2);
+INSERT INTO Character (PlayerID, name, isSelected) VALUES (1, 'Player1', 1);
+INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (2, 'Player2', 200, 2);
 INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (3, 'Player3', 100, 3);
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (4, 'Player4', 100, 4);
+INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (4, 'Player4', 250, 4);
 INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (5, 'Player5', 100, 5);
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (6, 'Player6', 100, 6);
+INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (6, 'Player6', 300, 6);
 
 INSERT INTO Inventory (PlayerID, WeaponID) VALUES (1, 1);
 INSERT INTO Inventory (PlayerID, WeaponID) VALUES (1, 2);
@@ -83,6 +83,14 @@ INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (1, 'Comb
 INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'Slash', 1);
 INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'HeavyAttack', 2);
 INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'ComboAttack', 3);
+
+-- DROP TABLES SHORTCUT FOR TESTING PURPOSES ONLY
+DROP TABLE Character;
+DROP TABLE Inventory;
+DROP TABLE FriendList;
+DROP TABLE Friend;
+DROP TABLE Weapon;
+DROP TABLE AttackType;
 
 
 
