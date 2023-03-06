@@ -1,0 +1,44 @@
+CREATE TABLE Character (
+    PlayerID int NOT NULL,
+    name varchar(255) NOT NULL,
+    health int NOT NULL,
+    isSelected int,
+    PRIMARY KEY (PlayerID),
+    FOREIGN KEY (isSelected) REFERENCES Weapon(WeaponID)
+);
+
+CREATE TABLE Inventory (
+    PlayerID int NOT NULL,
+    size int NOT NULL,
+    isFull boolean NOT NULL,
+    FOREIGN KEY (PlayerID) REFERENCES Character(PlayerID)
+);
+
+CREATE TABLE FriendList (
+    PlayerID int NOT NULL,
+    FriendID int NOT NULL,
+    FOREIGN KEY (PlayerID) REFERENCES Character(PlayerID),
+    FOREIGN KEY (FriendID) REFERENCES Friend(PlayerID)
+);
+
+CREATE TABLE Friend (
+    PlayerID int NOT NULL,
+    name varchar(255) NOT NULL,
+    health int NOT NULL,
+    PRIMARY KEY (PlayerID)
+);
+
+CREATE TABLE Weapon (
+    WeaponID int NOT NULL,
+    Power int NOT NULL,
+    name varchar(255) NOT NULL,
+    PRIMARY KEY (WeaponID)
+)
+
+CREATE TABLE AttackType (
+    WeaponID int NOT NULL,
+    AttackType varchar(255) NOT NULL,
+    AttackMultiplier int NOT NULL,
+    FOREIGN KEY (WeaponID) REFERENCES Character(isSelected),
+);
+
