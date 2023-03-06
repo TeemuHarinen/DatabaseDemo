@@ -1,8 +1,8 @@
-
+/*
 CREATE TABLE Character (
     PlayerID int NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
-    health int NOT NULL DEFAULT 100,
+    health int NOT NULL DEFAULT 100 CHECK(health > 0),
     isSelected int,
     PRIMARY KEY (PlayerID),
     FOREIGN KEY (isSelected) REFERENCES Weapon(WeaponID)
@@ -84,6 +84,7 @@ INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'Slas
 INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'HeavyAttack', 2);
 INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'ComboAttack', 3);
 
+/*
 -- DROP TABLES SHORTCUT FOR TESTING PURPOSES ONLY
 DROP TABLE Character;
 DROP TABLE Inventory;
@@ -91,9 +92,11 @@ DROP TABLE FriendList;
 DROP TABLE Friend;
 DROP TABLE Weapon;
 DROP TABLE AttackType;
+*/
 
-
-
+SELECT * FROM Character;
+SELECT * FROM Inventory WHERE PlayerID = 1;
+SELECT * FROM FRIENDLIST WHERE PlayerID = 1 AND FriendID = 2;
 
 
 
