@@ -1,4 +1,4 @@
-/*
+
 CREATE TABLE Character (
     PlayerID int NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
@@ -97,6 +97,7 @@ DROP TABLE AttackType;
 SELECT * FROM Character;
 SELECT * FROM Inventory WHERE PlayerID = 1;
 SELECT * FROM FRIENDLIST WHERE PlayerID = 1 AND FriendID = 2;
+
 
 
 
