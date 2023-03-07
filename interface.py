@@ -1,178 +1,123 @@
 import sqlite3
 db = sqlite3.connect('database.db')
 cur = db.cursor()
-def initializeDB():
-    try:
-        f = open("sqlcommands.sql", "r")
-        commandstring = ""
-        for line in f.readlines():
-            commandstring+=line
-        cur.executescript(commandstring)
-    except sqlite3.OperationalError:
-        print("Database exists, skip initialization")
-    except:
-        print("No SQL file to be used for initialization") 
-
 
 def main():
-    initializeDB()
     userInput = -1
     while(userInput != "0"):
         print("\nMenu options:")
-        print("1: Print Players")
-        print("2: Print Ranking")
-        print("3: Print Matches")
-        print("4: Search for one player")
-        print("5: Move matchdate")
-        print("6: Delete player")
+        print("1: Add character")
+        print("2: Update character")
+        print("3: Delete character")
+        print("4: Search inventory")
         print("0: Quit")
-        userInput = input("What do you want to do? ")
-        print(userInput)
+        userInput = input("What do you want to do: ")
+        if int(userInput) < 0 or int(userInput) > 4:
+            print("Invalid input")
+            continue
         if userInput == "1":
-            printPlayers()
+            insertPlayer()
         if userInput == "2":
-            printRanking()
+            updateCharacter()
         if userInput == "3":
-            printMatches()
+            deleteCharacter()
         if userInput == "4":
-            searchPlayer()
-        if userInput == "5":
-            moveMatch()
-        if userInput == "6":
-            deletePlayer()
+            searchInventory()
         if userInput == "0":
-            print("Ending software...")
+            print("Shutting down...")
+            break
     db.close()        
     return
 
-def printPlayers():
-    print("Printing players")
-    """
-    Insert the correct Python and SQL commands
-    to print all players
-    """
-    #Start your modifications after this comment
-    #You should print the data noe row at a time.
-    db = sqlite3.connect("hw5tennis.db")
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM Player;")
-    results = cursor.fetchall()
-    for i in range(len(results)):
-        print(results[i])
-
-    return
-
-def printRanking():
-    print("Printing ranking")
-    """
-    Insert the correct Python and SQL commands 
-    to print all ranking information
-    """
-    #Start your modifications after this comment
-    #You should print the data noe row at a time.
-    db = sqlite3.connect("hw5tennis.db")
+def insertPlayer():
+    playerName = input("Add characher name: ")
+    if playerName == "":
+        print("Invalid name")
+        return
+    selectedWeapon = int(input("Select weapon for you character: \n 1) Sword, 2) Axe, 3) Bow, 4), Spear, 5) Staff: "))
+    if selectedWeapon < 1 or selectedWeapon > 5:
+        print("Invalid weapon selection")
+        return
+    health = int(input("Add health (10 - 1 000): "))
+    if health < 10 or health > 1000:
+        print("Invalid health selection")
+        return
     try:
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM Ranking;")
-        results = cursor.fetchall()
-        for i in range(len(results)):
-            print(results[i])
+        cur.execute("SELECT PlayerID FROM Character ORDER BY PlayerID DESC LIMIT 1;")
+        playerID = cur.fetchone()[0]
+        playerID = int(playerID) + 1
+        cur.execute("INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (?, ?, ?, ?);", (playerID, playerName, health, selectedWeapon))
+        db.commit()
     except db.Error:
         print("Error!")
         db.rollback()
+        return
+    print("Character added: \n PlayerID", playerID, " \n Name: ", playerName, " \n Weapon: ", selectedWeapon, " \n Health: ", health)
     return
 
-def printMatches():
-    print("Printing matches")
-    """ 
-    Insert the correct Python and SQL commands 
-    to print all ranking information
-    """
-    #Start your modifications after this comment
-    #You should print the data one row at a time.
-    db = sqlite3.connect("hw5tennis.db")
+def updateCharacter():
+    characterID = input("What is the character's ID: ")
     try:
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM Matches;")
-        results = cursor.fetchall()
-        for i in range(len(results)):
-            print(results[i])
+        cur.execute("SELECT * FROM Character WHERE PlayerID = ?;", (characterID,))
+        data = cur.fetchall()
+        cur.execute("SELECT name FROM Weapon WHERE WeaponID = ?;", (data[0][3],))
+        weaponName = cur.fetchone()[0]
+        print("Character selected: ", data[0][1])
+        print("Your character's current weapon is: ", weaponName)
+        print("Your character's current health is: ", data[0][2])
+        print()
+        selectedWeapon = int(input("Select new weapon for your character: \n 1) Sword, 2) Axe, 3) Bow, 4), Spear, 5) Staff: "))
+        if selectedWeapon < 1 or selectedWeapon > 5:
+            print("Invalid weapon selection")
+            return
+        health = int(input("Add new health (10 - 1 000): "))
+        if health < 10 or health > 1000:
+            print("Invalid health selection")
+            return
+        cur.execute("UPDATE Character SET isSelected = ?, health = ? WHERE PlayerID = ?;", (selectedWeapon, health, characterID,))
+        db.commit()
+        cur.execute("SELECT name FROM Weapon WHERE WeaponID = ?;", (selectedWeapon,))
+        newWeaponName = cur.fetchone()[0]
     except db.Error:
         print("Error!")
         db.rollback()
-
+        return
+    print("Character updated: \n New weapon: ", newWeaponName, " \n New health: ", health)
     return
 
-def searchPlayer():
-    playerName = input("What is the player's surname? ")
-    """ 
-    Insert the correct Python and SQL commands to find the player 
-    using the given surname
-    """
-    #Start your modifications after this comment
-    #You are given the print statements, now you need to add the fetched data to the five prints.
-    db = sqlite3.connect("hw5tennis.db")
+def deleteCharacter():
+    characterID = input("What is the player's PlayerID you want to delete: ")
+    try:
+        cur.execute("SELECT name FROM Character WHERE PlayerID = ?;", (characterID,))
+        name = cur.fetchone()[0]
+        cur.execute("DELETE FROM Character WHERE PlayerID = ?;", (characterID,))
+        db.commit()
+    except db.Error:
+        print("Error!")
+        db.rollback()
+        return
+    print("Character '{}' deleted".format(name))
+    return
+
+def searchInventory():
+    charaterID = input("What PlayerID's inventory you want to search: ")
     try:    
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM Player WHERE last_name = ?;", (playerName,))
-        oneRow = cursor.fetchone()
-
-        print("ID:", oneRow[0])
-        print("First name:", oneRow[1])
-        print("Last name:", oneRow[2])
-        print("Birthdate: ", oneRow[3])
-        print("Nationality:", oneRow[4])
+        cur.execute("SELECT name FROM Character WHERE PlayerID = ?;", (charaterID,))
+        playerName = cur.fetchone()[0]
+        cur.execute("SELECT WeaponID FROM Inventory WHERE PlayerID = ?;", (charaterID,))
+        weaponID = cur.fetchall()
+        if len(weaponID) == 0:
+            print("'{}' inventory is empty".format(playerName))
+            return
+        print("'{}' Inventory: ".format(playerName))
+        print("Weapons:")
+        for i in range(len(weaponID)):
+            cur.execute("SELECT name FROM Weapon WHERE WeaponID = ?;", (weaponID[i][0],))
+            weaponName = cur.fetchone()[0]
+            print(weaponName)
     except db.Error:
         print("Error!")
         db.rollback()
 
     return
-
-def moveMatch():
-    matchID = input("What is the matchID of the match you want to move? ")
-    newMatchDate = input ("What is the new matchdate you want to set?")
-    
-    """ 
-    Using the correct Python and SQL comands:
-    Change the match date based on the given matchID and new matchdate
-    IF a new matchdate is set to NULL, set the winner and result to NULL as well
-    """
-    #Start your modifications after this comment
-
-    db = sqlite3.connect("hw5tennis.db")
-    cursor = db.cursor()
-    # cursor.execute("SELECT * FROM Matches WHERE matchid = ?", (matchID,))
-    # oneRow = cursor.fetchone()
-    if (newMatchDate):
-        cursor.execute("UPDATE Matches SET matchdate = ? WHERE matchid = ?;", (newMatchDate,matchID,))
-    else:
-        cursor.execute("UPDATE Matches SET resultSets = ?, matchdate = ?, winnerID = ?  WHERE matchid = ?;", (None, None, None, matchID))
-        
-
-    
-
-
-    return
-
-def deletePlayer():
-    playerID = input("What is the player's PlayerID? ")
-    """ 
-    Using the correct Python and SQL comands:
-    Delete the Player and his Ranking information
-    Additionally, set the playerid to NULL in ALL match-data it is found
-    """
-    #Start your modifications after this comment
-
-    db = sqlite3.connect("hw5tennis.db")
-    cursor = db.cursor()
-    cursor.execute("DELETE FROM Ranking WHERE FK_playerid = ?", (playerID,))
-    cursor.execute("UPDATE Matches SET FK_playerOne = ? WHERE FK_playerOne = ?;", (playerID))
-    cursor.execute("UPDATE Matches SET FK_playerTwo = ? WHERE FK_playerTwo = ?;", (playerID))
-    cursor.execute("DELETE FROM Player WHERE playerid = ?", (playerID,))
-    
-
-
-
-
-
 main()
