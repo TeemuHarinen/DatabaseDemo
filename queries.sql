@@ -1,4 +1,4 @@
-
+/*
 CREATE TABLE Character (
     PlayerID int NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
@@ -43,9 +43,9 @@ CREATE TABLE AttackType (
     AttackMultiplier int NOT NULL,
     FOREIGN KEY (WeaponID) REFERENCES Character(isSelected)
 );
+*/
 
-
-
+/*
 INSERT INTO Character (PlayerID, name, isSelected) VALUES (1, 'Player1', 1);
 INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (2, 'Player2', 200, 2);
 INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (3, 'Player3', 100, 3);
@@ -83,9 +83,10 @@ INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (1, 'Comb
 INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'Slash', 1);
 INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'HeavyAttack', 2);
 INSERT INTO AttackType (WeaponID, AttackType, AttackMultiplier) VALUES (2, 'ComboAttack', 3);
+*/
 
 /*
--- DROP TABLES SHORTCUT FOR TESTING PURPOSES ONLY
+-- DROP TABLES SHORTCUT FOR TESTING PURPOSES ONLY!
 DROP TABLE Character;
 DROP TABLE Inventory;
 DROP TABLE FriendList;
@@ -94,9 +95,17 @@ DROP TABLE Weapon;
 DROP TABLE AttackType;
 */
 
+-- Player 1 stats
 SELECT * FROM Character;
+-- Player 1 weapons
 SELECT * FROM Inventory WHERE PlayerID = 1;
-SELECT * FROM FRIENDLIST WHERE PlayerID = 1 AND FriendID = 2;
+-- Player 1 weapons and their stats
+SELECT * FROM Weapon INNER JOIN Inventory ON Weapon.WeaponID = Inventory.WeaponID WHERE PlayerID = 1;
+-- Player friends
+SELECT * FROM FRIENDLIST INNER JOIN Friend ON FriendList.FriendID = Friend.PlayerID;
+-- Weapon stats and corresponding attack types
+SELECT * FROM Weapon INNER JOIN AttackType ON Weapon.WeaponID = AttackType.WeaponID;
+
 
 
 
