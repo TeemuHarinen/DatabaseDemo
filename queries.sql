@@ -3,7 +3,7 @@ CREATE TABLE Character (
     PlayerID int NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
     health int NOT NULL DEFAULT 100 CHECK(health > 0),
-    isSelected int DFEAULT 1,
+    isSelected int DEFAULT 1,
     PRIMARY KEY (PlayerID),
     FOREIGN KEY (isSelected) REFERENCES Inventory(WeaponID)
 );
@@ -111,6 +111,12 @@ SELECT * FROM FriendList INNER JOIN Friend ON FriendList.FriendID = Friend.Playe
 -- Weapon stats and corresponding attack types
 SELECT * FROM Weapon INNER JOIN AttackType ON Weapon.WeaponID = AttackType.WeaponID WHERE AttackType.AttackMultiplier > 1;
 
+-- Indexes to speed up queries
+
+/*
+CREATE INDEX PlayerID ON Character(PlayerID);
+CREATE INDEX WeaponID ON Weapon(WeaponID);
+*/
 
 
 
