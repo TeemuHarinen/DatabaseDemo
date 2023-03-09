@@ -1,4 +1,4 @@
-
+/*
 CREATE TABLE Character (
     PlayerID int NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
