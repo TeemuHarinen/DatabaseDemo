@@ -68,9 +68,13 @@ def updateCharacter():
         cur.execute("SELECT * FROM Character WHERE PlayerID = ?;", (characterID,))
         data = cur.fetchall()
         cur.execute("SELECT name FROM Weapon WHERE WeaponID = ?;", (data[0][3],))
-        weaponName = cur.fetchone()[0]
+        weaponSelected = cur.fetchone()[0]
+        cur.execute("SELECT WeaponID FROM Inventory WHERE PlayerID = ?;", (characterID,))
+        weaponID = cur.fetchall()
+        cur.execute("SELECT name FROM Weapon WHERE WeaponID = ?;", (weaponID[0][0],))
+        weaponName = cur.fetchone()
         print("Character selected: ", data[0][1])
-        print("Your character's current weapon is: ", weaponName)
+        print("Your character's current weapon is: ", weaponSelected)
         print("Your character's current health is: ", data[0][2])
         cur.execute("SELECT WeaponID FROM Inventory WHERE PlayerID = ?;", (characterID,))
         weaponID = cur.fetchall()

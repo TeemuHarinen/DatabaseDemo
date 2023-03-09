@@ -5,15 +5,15 @@ CREATE TABLE Character (
     health int NOT NULL DEFAULT 100 CHECK(health > 0),
     isSelected int DEFAULT 1,
     PRIMARY KEY (PlayerID),
-    FOREIGN KEY (isSelected) REFERENCES Inventory(WeaponID)
+    FOREIGN KEY (isSelected) REFERENCES Inventory(WeaponID) ON DELETE CASCADE
 );
 
 
 CREATE TABLE Inventory (
     PlayerID int NOT NULL,
     WeaponID int NOT NULL,
-    FOREIGN KEY (WeaponID) REFERENCES Weapon(WeaponID),
-    FOREIGN KEY (PlayerID) REFERENCES Character(PlayerID)
+    FOREIGN KEY (WeaponID) REFERENCES Weapon(WeaponID) ON DELETE CASCADE,
+    FOREIGN KEY (PlayerID) REFERENCES Character(PlayerID) ON DELETE CASCADE
 );
 
 CREATE TABLE FriendList (
@@ -47,11 +47,11 @@ CREATE TABLE AttackType (
 
 
 INSERT INTO Character (PlayerID, name, isSelected) VALUES (1, 'Player1', 1);
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (2, 'Player2', 200, 2);
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (3, 'Player3', 100, 3);
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (4, 'Player4', 250, 4);
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (5, 'Player5', 100, 5);
-INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (6, 'Player6', 300, 6);
+INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (2, 'Player2', 200, 1);
+INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (3, 'Player3', 100, 1);
+INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (4, 'Player4', 250, 1);
+INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (5, 'Player5', 100, 1);
+INSERT INTO Character (PlayerID, name, health, isSelected) VALUES (6, 'Player6', 300, 1);
 
 INSERT INTO Inventory (PlayerID, WeaponID) VALUES (1, 1);
 INSERT INTO Inventory (PlayerID, WeaponID) VALUES (1, 2);
@@ -98,8 +98,8 @@ DROP TABLE FriendList;
 DROP TABLE Friend;
 DROP TABLE Weapon;
 DROP TABLE AttackType;
-*/
 
+/*
 -- Player 1 st
 SELECT * FROM Character;
 -- Player 1 weapons
