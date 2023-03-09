@@ -52,7 +52,7 @@ def insertPlayer():
         print("Error!")
         db.rollback()
         return
-    print("Character added: \n PlayerID", playerID, " \n Name: ", playerName, " \n Weapon: ", selectedWeapon, " \n Health: ", health)
+    print("Character added: \n PlayerID:", playerID, " \n Name: ", playerName, " \n Weapon: ", selectedWeapon, " \n Health: ", health)
     return
 
 def updateCharacter():
