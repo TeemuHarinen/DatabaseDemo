@@ -10,9 +10,10 @@ def main():
         print("2: Update character")
         print("3: Delete character")
         print("4: Search inventory")
+        print("5: Print example queries")
         print("0: Quit")
         userInput = input("What do you want to do: ")
-        if int(userInput) < 0 or int(userInput) > 4:
+        if int(userInput) < 0 or int(userInput) > 5:
             print("Invalid input")
             continue
         if userInput == "1":
@@ -23,6 +24,8 @@ def main():
             deleteCharacter()
         if userInput == "4":
             searchInventory()
+        if userInput == "5":
+            printQueries()
         if userInput == "0":
             print("Shutting down...")
             break
@@ -92,6 +95,9 @@ def deleteCharacter():
         name = cur.fetchone()[0]
         cur.execute("DELETE FROM Character WHERE PlayerID = ?;", (characterID,))
         db.commit()
+    except TypeError:
+        print("Invalid PlayerID")
+        return
     except db.Error:
         print("Error!")
         db.rollback()
@@ -118,6 +124,67 @@ def searchInventory():
     except db.Error:
         print("Error!")
         db.rollback()
-
+        return
     return
+
+def printQueries():
+    try:
+        print("")
+        print("Example queries:\n")
+        print("All players, and their stats")
+        print("SELECT * FROM Character;")
+        print("(PlayerID, name, health, isSelected)")
+        print("----------------------------------")
+        cur.execute("SELECT * FROM Character;")
+        
+        data = cur.fetchall()
+        for i in range(len(data)):
+            print(data[i])
+        
+        print("")
+        print("Player 1 inventory")
+        print("SELECT * FROM Inventory WHERE PlayerID = 1;")
+        print("(PlayerID, WeaponID)")
+        print("----------------------------------")
+        cur.execute("SELECT * FROM Inventory WHERE PlayerID = 1;")
+        data = cur.fetchall()
+        for i in range(len(data)):
+            print(data[i])
+        
+        print("")
+        print("Player 1 weapons stats")
+        print("SELECT * FROM Weapon INNER JOIN Inventory ON Weapon.WeaponID = Inventory.WeaponID WHERE PlayerID = 1;")
+        print("(WeaponID, damage, name, PlayerID, WeaponID)")
+        print("----------------------------------")
+        cur.execute("SELECT * FROM Weapon INNER JOIN Inventory ON Weapon.WeaponID = Inventory.WeaponID WHERE PlayerID = 1;")
+        data = cur.fetchall()
+        for i in range(len(data)):
+            print(data[i])
+        
+        print("")
+        print("Player friendlist")
+        print("SELECT * FROM FRIENDLIST INNER JOIN Friend ON FriendList.FriendID = Friend.PlayerID;")
+        print("(PlayerID, FriendID, FriendPlayerID, name, health)")
+        print("----------------------------------")
+        cur.execute("SELECT * FROM FRIENDLIST INNER JOIN Friend ON FriendList.FriendID = Friend.PlayerID;")
+        data = cur.fetchall()
+        for i in range(len(data)):
+            print(data[i])
+        
+        print("")
+        print("All weapons and their attack types")
+        print("SELECT * FROM Weapon INNER JOIN AttackType ON Weapon.WeaponID = AttackType.WeaponID ORDER BY Weapon.name;")
+        print("(WeaponID, damage, name, WeaponID, AttackMultiplier)")
+        print("----------------------------------")
+        cur.execute("SELECT * FROM Weapon INNER JOIN AttackType ON Weapon.WeaponID = AttackType.WeaponID ORDER BY Weapon.name;")
+        data = cur.fetchall()
+        for i in range(len(data)):
+            print(data[i])
+
+    except db.Error:
+        print("Error!")
+        db.rollback()
+        return
+    return
+
 main()
