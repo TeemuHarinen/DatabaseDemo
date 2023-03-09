@@ -1,5 +1,6 @@
 import sqlite3
 db = sqlite3.connect('database.db')
+db.executescript("PRAGMA foreign_keys=ON")
 cur = db.cursor()
 
 def main():
@@ -122,18 +123,18 @@ def updateCharacter():
 
 def deleteCharacter():
     characterID = input("What is the player's PlayerID you want to delete: ")
-    try:
-        cur.execute("SELECT name FROM Character WHERE PlayerID = ?;", (characterID,))
-        name = cur.fetchone()[0]
-        cur.execute("DELETE FROM Character WHERE PlayerID = ?;", (characterID,))
-        db.commit()
-    except TypeError:
-        print("Player with PlayerID '{}' does not exist".format(characterID))
-        return
-    except db.Error:
-        print("Error!")
-        db.rollback()
-        return
+    #try:
+    cur.execute("SELECT name FROM Character WHERE PlayerID = ?;", (characterID,))
+    name = cur.fetchone()[0]
+    cur.execute("DELETE FROM Character WHERE PlayerID = ?;", (characterID,))
+    db.commit()
+    # except TypeError:
+    #     print("Player with PlayerID '{}' does not exist".format(characterID))
+    #     return
+    # except db.Error:
+    #     print("Error!")
+    #     db.rollback()
+    #     return
     print("Character '{}' deleted".format(name))
     return
 

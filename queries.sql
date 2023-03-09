@@ -1,11 +1,11 @@
-/*
+
 CREATE TABLE Character (
     PlayerID int NOT NULL,
     name varchar(255) NOT NULL UNIQUE,
     health int NOT NULL DEFAULT 100 CHECK(health > 0),
     isSelected int DEFAULT 1,
     PRIMARY KEY (PlayerID),
-    FOREIGN KEY (isSelected) REFERENCES Inventory(WeaponID) ON DELETE CASCADE
+    FOREIGN KEY (isSelected) REFERENCES Weapon(WeaponID) ON DELETE CASCADE
 );
 
 
@@ -19,8 +19,8 @@ CREATE TABLE Inventory (
 CREATE TABLE FriendList (
     PlayerID int NOT NULL,
     FriendID int NOT NULL,
-    FOREIGN KEY (PlayerID) REFERENCES Character(PlayerID),
-    FOREIGN KEY (FriendID) REFERENCES Friend(PlayerID)
+    FOREIGN KEY (PlayerID) REFERENCES Character(PlayerID) ON DELETE CASCADE,
+    FOREIGN KEY (FriendID) REFERENCES Friend(PlayerID) ON DELETE CASCADE
 );
 
 CREATE TABLE Friend (
@@ -41,7 +41,7 @@ CREATE TABLE AttackType (
     WeaponID int NOT NULL,
     AttackType varchar(255) NOT NULL,
     AttackMultiplier int NOT NULL,
-    FOREIGN KEY (WeaponID) REFERENCES Character(isSelected)
+    FOREIGN KEY (WeaponID) REFERENCES Weapon(isSelected) ON DELETE CASCADE
 );
 
 
