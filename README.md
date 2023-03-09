@@ -1,2 +1,2 @@
-# DatabaseTest
+# Database for fictional game character.
  
