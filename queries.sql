@@ -5,7 +5,7 @@ CREATE TABLE Character (
     health int NOT NULL DEFAULT 100 CHECK(health > 0),
     isSelected int DEFAULT 1,
     PRIMARY KEY (PlayerID),
-    FOREIGN KEY (isSelected) REFERENCES Weapon(WeaponID) ON DELETE CASCADE
+    FOREIGN KEY (isSelected) REFERENCES Weapon(WeaponID) ON DELETE SET DEFAULT
 );
 
 
